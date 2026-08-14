@@ -1,0 +1,975 @@
+/* ============================================================
+   GradeRival — design tokens
+   Concept: the report card meets the scoreboard. Ink-navy
+   "transcript" background, warm paper cards, a rubber-stamp
+   grade mark as the signature element, mono figures for stats.
+   ============================================================ */
+
+:root {
+  --ink: #0e1526;
+  --ink-2: #141d33;
+  --ink-3: #1b2540;
+  --line: rgba(240, 237, 228, 0.1);
+  --line-strong: rgba(240, 237, 228, 0.2);
+  --paper: #f4efe3;
+  --paper-dim: #e8e1cf;
+  --ink-text: #eee9db;
+  --muted: #93a0bd;
+  --gold: #e8b93f;
+  --gold-ink: #4a3a10;
+  --rival: #e15a45;
+  --mint: #4fd1a5;
+  --violet: #9d8cff;
+
+  --display: "Fraunces", "Iowan Old Style", serif;
+  --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-card: 18px;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 20px 40px -24px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--ink);
+  background-image: radial-gradient(
+      circle at 12% -10%,
+      rgba(232, 185, 63, 0.1),
+      transparent 42%
+    ),
+    radial-gradient(circle at 100% 0%, rgba(157, 140, 255, 0.08), transparent 40%);
+  color: var(--ink-text);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: var(--body);
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--gold-ink);
+}
+
+/* Scrollbars — thin, in-key */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-3);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- Layout shells ---------- */
+
+.gr-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+.gr-boot {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Top bar ---------- */
+
+.gr-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.gr-wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.gr-wordmark .rival {
+  color: var(--rival);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.gr-wordmark .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 4px rgba(79, 209, 165, 0.15);
+}
+
+.gr-profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  padding: 7px 14px 7px 7px;
+  border-radius: 999px;
+}
+
+.gr-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13px;
+  background: linear-gradient(155deg, var(--gold), #c98a2b);
+  color: #241a04;
+}
+
+.gr-profile-chip .name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gr-profile-chip .lvl {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- Nav ---------- */
+
+.gr-nav {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+
+.gr-nav button {
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 12px 6px;
+  margin-right: 22px;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gr-nav button .idx {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.gr-nav button.active {
+  color: var(--paper);
+}
+
+.gr-nav button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 22px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.gr-nav button:hover {
+  color: var(--ink-text);
+}
+
+/* ---------- Cards ---------- */
+
+.gr-card {
+  background: linear-gradient(180deg, var(--ink-2), var(--ink-3));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+}
+
+.gr-card-title {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gr-card-sub {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 0 0 16px;
+}
+
+.gr-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.gr-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.gr-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 860px) {
+  .gr-grid.cols-2,
+  .gr-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Dashboard hero ---------- */
+
+.gr-hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 860px) {
+  .gr-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gr-hero-main {
+  background: linear-gradient(165deg, #17213b, #0f1729 70%);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gr-hero-main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(240, 237, 228, 0.025) 0px,
+    rgba(240, 237, 228, 0.025) 1px,
+    transparent 1px,
+    transparent 34px
+  );
+  pointer-events: none;
+}
+
+/* Signature element: the rubber "graded" stamp */
+.gr-stamp {
+  --stamp-color: var(--rival);
+  flex: none;
+  width: 148px;
+  height: 148px;
+  border-radius: 46% 54% 52% 48% / 55% 45% 55% 45%;
+  border: 3px double var(--stamp-color);
+  color: var(--stamp-color);
+  display: grid;
+  place-items: center;
+  transform: rotate(-7deg);
+  position: relative;
+  background: radial-gradient(
+    circle,
+    rgba(225, 90, 69, 0.08),
+    transparent 70%
+  );
+  z-index: 1;
+}
+
+.gr-stamp.grade-A {
+  --stamp-color: var(--mint);
+  background: radial-gradient(circle, rgba(79, 209, 165, 0.1), transparent 70%);
+}
+.gr-stamp.grade-B {
+  --stamp-color: var(--gold);
+  background: radial-gradient(circle, rgba(232, 185, 63, 0.1), transparent 70%);
+}
+
+.gr-stamp::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: inherit;
+  border: 1px dashed var(--stamp-color);
+  opacity: 0.55;
+}
+
+.gr-stamp .gpa {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.gr-stamp .label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.gr-hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.gr-hero-copy .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.gr-hero-copy h1 {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  max-width: 34ch;
+}
+
+.gr-hero-copy p {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0;
+  max-width: 46ch;
+}
+
+/* ---------- Level / XP ---------- */
+
+.gr-level-card {
+  padding: 24px;
+}
+
+.gr-level-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.gr-level-badge {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--gold);
+}
+
+.gr-level-badge sup {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.gr-xp-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.gr-xp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--rival));
+  transition: width 0.5s ease;
+}
+
+.gr-xp-caption {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.gr-xp-sources {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gr-xp-source-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.gr-xp-source-row b {
+  color: var(--ink-text);
+  font-weight: 600;
+}
+
+/* ---------- Stat pills ---------- */
+
+.gr-stat {
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.gr-stat .n {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.gr-stat .k {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.gr-stat .n.up {
+  color: var(--mint);
+}
+.gr-stat .n.down {
+  color: var(--rival);
+}
+
+/* ---------- Buttons ---------- */
+
+.gr-btn {
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  background: var(--ink);
+  color: var(--ink-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.gr-btn:hover {
+  border-color: var(--gold);
+}
+
+.gr-btn:active {
+  transform: scale(0.97);
+}
+
+.gr-btn.primary {
+  background: linear-gradient(160deg, var(--gold), #c98a2b);
+  border-color: transparent;
+  color: #241a04;
+}
+
+.gr-btn.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.gr-btn.danger {
+  background: transparent;
+  border-color: rgba(225, 90, 69, 0.4);
+  color: var(--rival);
+}
+
+.gr-btn.small {
+  padding: 6px 11px;
+  font-size: 11.5px;
+  border-radius: 8px;
+}
+
+.gr-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Forms ---------- */
+
+.gr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gr-field label {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gr-field input,
+.gr-field select {
+  background: var(--ink);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-text);
+  padding: 9px 11px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: var(--body);
+}
+
+.gr-field input:focus,
+.gr-field select:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.gr-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+/* ---------- Classes / grades ---------- */
+
+.gr-class {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  background: var(--ink);
+  margin-bottom: 14px;
+}
+
+.gr-class-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gr-class-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gr-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.gr-class-name h3 {
+  font-family: var(--display);
+  font-size: 16px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.gr-class-grade {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.gr-pct-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-2);
+  overflow: hidden;
+  margin: 10px 0 14px;
+}
+
+.gr-pct-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.gr-category {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.gr-category-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-family: var(--mono);
+}
+
+.gr-assignment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 6px 0;
+}
+
+.gr-assignment .score {
+  font-family: var(--mono);
+  color: var(--ink-text);
+}
+
+.gr-assignment .name {
+  color: var(--ink-text);
+}
+
+.gr-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+}
+
+.gr-whatif-banner {
+  border: 1px dashed var(--violet);
+  background: rgba(157, 140, 255, 0.08);
+  color: var(--violet);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ---------- Leaderboard ---------- */
+
+.gr-lb-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.gr-lb-row:last-child {
+  border-bottom: none;
+}
+
+.gr-lb-rank {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.gr-lb-rank.gold {
+  color: var(--gold);
+  font-weight: 700;
+}
+.gr-lb-rank.silver {
+  color: #cfd6e6;
+  font-weight: 700;
+}
+.gr-lb-rank.bronze {
+  color: #cf8f5c;
+  font-weight: 700;
+}
+
+.gr-lb-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gr-lb-person .who {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.gr-lb-person .lvl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.gr-lb-gpa {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.gr-lb-row.you {
+  background: rgba(232, 185, 63, 0.06);
+  border-radius: 10px;
+}
+
+/* ---------- Groups / friends chips ---------- */
+
+.gr-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gr-person-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px 5px 5px;
+  font-size: 12.5px;
+}
+
+.gr-person-chip .dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--ink-3);
+}
+
+.gr-empty {
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  padding: 26px 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.gr-empty b {
+  color: var(--ink-text);
+  display: block;
+  font-family: var(--display);
+  font-size: 15px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* ---------- Study hub ---------- */
+
+.gr-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.gr-file-row:last-child {
+  border-bottom: none;
+}
+
+.gr-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gr-file-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--ink-3);
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  flex: none;
+}
+
+.gr-file-name {
+  font-weight: 600;
+}
+
+.gr-file-sub {
+  color: var(--muted);
+  font-size: 11px;
+  font-family: var(--mono);
+}
+
+.gr-dropzone {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.gr-dropzone:hover {
+  border-color: var(--gold);
+  color: var(--ink-text);
+}
+
+/* ---------- Quiz ---------- */
+
+.gr-quiz-q {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.gr-quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--ink);
+  border: 1px solid var(--line-strong);
+  color: var(--ink-text);
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.gr-quiz-opt:hover {
+  border-color: var(--gold);
+}
+
+.gr-quiz-opt.correct {
+  border-color: var(--mint);
+  background: rgba(79, 209, 165, 0.1);
+}
+
+.gr-quiz-opt.wrong {
+  border-color: var(--rival);
+  background: rgba(225, 90, 69, 0.1);
+}
+
+.gr-quiz-progress {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* ---------- Toast / XP pop ---------- */
+
+.gr-toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink-2);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  animation: gr-toast-in 0.25s ease;
+}
+
+@keyframes gr-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ---------- Section heading ---------- */
+
+.gr-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.gr-section-head h2 {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gr-section-head p {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 2px 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
